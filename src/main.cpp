@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -69,6 +70,22 @@ struct logic_gate_1 {
 
 
 
+void tokenize(std::string code) {
+    std::vector<std::string> toks;
+    string tok = "";
+    cout << code << "\n";
+    for (int i = 0; i < code.size(); i++) {
+        tok += code[i];
+        if (tok == ">") {
+            toks.push_back("INDXUP");
+            tok = "";
+        } else if (tok == "<") {
+            toks.push_back("INDXDOWN");
+            tok = "";
+        }
+    }
+}
+
 int main() {
 
     // LOGIC GATES DECLARATIONS
@@ -90,9 +107,12 @@ int main() {
     xorgate.define("XOR", xor_truth_table_results);
 
     // INTERPRETING/TESTING
-    int inp1;
-    cout << notgate.name << endl;
-    cin >> inp1;
-    cout << "--> " << notgate.eval(inp1) << endl;
+    std::string code;
+    do {
+        cout << ">>> ";
+        cin >> code;
+        tokenize(code);
+    } while (code != "quit");
     return 0;
 }
+
