@@ -41,7 +41,7 @@ struct logic_gate {
 struct logic_gate_1 {
     int truth_table[2][2] = {
         {0, 0},
-        {0, 0}
+        {1, 0}
     };
 
     std::string name = "NONE1";
