@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "*.g": "vb",
-        "*.mspl": "javascript",
-        "system_error": "cpp"
-    }
-}
