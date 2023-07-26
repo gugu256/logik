@@ -73,27 +73,26 @@ int main() {
 
     // LOGIC GATES DECLARATIONS
 
-    logic_gate orgate; // NOT
-    int truth_table_results[4] = {1, 0};
-    orgate.define("NO", truth_table_results); // IM HERE
+    logic_gate_1 notgate; // NOT
+    int not_truth_table_results[2] = {1, 0};
+    notgate.define("NOT", not_truth_table_results); // IM HERE
 
-    logic_gate orgate; // AND
-    int truth_table_results[4] = {0, 0, 0, 1};
-    orgate.define("AND", truth_table_results);
+    logic_gate andgate; // AND
+    int and_truth_table_results[4] = {0, 0, 0, 1};
+    andgate.define("AND", and_truth_table_results);
 
     logic_gate orgate; // OR
-    int truth_table_results[4] = {0, 1, 1, 1};
-    orgate.define("OR", truth_table_results);
+    int or_truth_table_results[4] = {0, 1, 1, 1};
+    orgate.define("OR", or_truth_table_results);
 
     logic_gate xorgate; // XOR
-    int truth_table_results[4] = {0, 1, 1, 0};
-    xorgate.define("XOR", truth_table_results);
+    int xor_truth_table_results[4] = {0, 1, 1, 0};
+    xorgate.define("XOR", xor_truth_table_results);
 
     // INTERPRETING/TESTING
-    int inp1, inp2;
-    cout << xorgate.name << endl;
+    int inp1;
+    cout << notgate.name << endl;
     cin >> inp1;
-    cin >> inp2;
-    cout << "--> " << xorgate.eval(inp1, inp2) << endl;
+    cout << "--> " << notgate.eval(inp1) << endl;
     return 0;
 }
