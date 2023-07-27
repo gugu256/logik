@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 //using namespace std;
 
@@ -122,6 +123,12 @@ std::vector<std::string> tokenize(std::string code) {
         } else if (tok == "XNOR") {
             toks.push_back("XNORGATE");
             tok = "";
+        } else if (tok == ".") {
+            toks.push_back("PRINT");
+            tok = "";
+        } else if (tok == ",") {
+            toks.push_back("INPUT");
+            tok = "";
         } else if (tok == "0" or tok == "1" or tok == "2" or tok == "3" or tok == "4" or tok == "5" or tok == "6" or tok == "7" or tok == "8" or tok == "9") {
             if (innum) {
                 num += tok;
@@ -139,6 +146,38 @@ std::vector<std::string> tokenize(std::string code) {
     }
     std::cout << "\n-----" << "\n";
     return toks;
+}
+
+void interpret(std::vector<std::string> tokens) {
+    int data[256];
+    std::fill(std::begin(data), std::end(data), 0);
+    int data_pointer = 0;
+    
+    int i = 0;
+    while (i < tokens.size()) {
+        // int day = (int) argv[1];
+        if (tokens[i] == "INDXUP") {
+            data_pointer++;
+            i++;
+        } else if (tokens[i] == "INDXDOWN") {
+            data_pointer--;
+            i++;
+        } else if (tokens[i] == "PLUS") {
+            data[data_pointer]++;
+            i++;
+        } else if (tokens[i] == "MINUS") {
+            data[data_pointer]--;
+            i++;
+        } else if (tokens[i] == "PRINT") {
+            std::cout << data[data_pointer] << "\n";
+            i++;
+        } else if (tokens[i] == "INPUT") {
+            int user_input;
+            std::cin >> user_input;
+            data[data_pointer] = user_input;
+            i++;
+        }
+    }
 }
 
 int main() {
@@ -178,23 +217,12 @@ int main() {
     xnorgate.define("XNOR", xnor_truth_table_results);
 
     // INTERPRETING/TESTING
+    //interpret();
     std::string code;
     do {
         std::cout << ">>> ";
         std::getline(std::cin, code);
-        tokenize(code);
+        interpret(tokenize(code));
     } while (code != "quit");
-    /*int inp1, inp2;
-    cin >> inp1;
-    cin >> inp2;
-    cout << "\n" << notgate.name << "\n";
-    cout << notgate.eval(inp1) << "\n";
-    cout << "\n" << andgate.name << "\n";
-    cout << andgate.eval(inp1, inp2) << "\n";
-    cout << "\n" << orgate.name << "\n";
-    cout << orgate.eval(inp1, inp2) << "\n";
-    cout << "\n" << xorgate.name << "\n";
-    cout << xorgate.eval(inp1, inp2) << "\n";*/
     return 0;
 }
-
