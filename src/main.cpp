@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 #include <algorithm>
 
 //using namespace std;
@@ -77,7 +78,6 @@ std::vector<std::string> tokenize(std::string code) {
     std::string tok = "";
     std::string num = "";
     bool innum = false;
-    std::cout << code << "\n";
     for (int i = 0; i < code.size(); i++) {
         tok += code[i];
         if (tok == " " or tok == "\n" or tok == "\t") {
@@ -140,15 +140,44 @@ std::vector<std::string> tokenize(std::string code) {
             }
         }
     }
-    std::cout << "-----" << "\n";
-    for (int i = 0; i < toks.size(); i++) {
-        std::cout << toks[i] << ", ";
-    }
-    std::cout << "\n-----" << "\n";
     return toks;
 }
 
 void interpret(std::vector<std::string> tokens) {
+    // LOGIC GATES DECLARATIONS
+
+    logic_gate_1 notgate; // NOT
+    int not_truth_table_results[2] = {1, 0};
+    notgate.define("NOT", not_truth_table_results);
+
+    logic_gate_1 bufgate; // BUF
+    int buf_truth_table_results[2] = {0, 1};
+    bufgate.define("BUF", buf_truth_table_results);
+
+    logic_gate andgate; // AND
+    int and_truth_table_results[4] = {0, 0, 0, 1};
+    andgate.define("AND", and_truth_table_results);
+
+    logic_gate nandgate; // NAND
+    int nand_truth_table_results[4] = {1, 1, 1, 0};
+    nandgate.define("NAND", nand_truth_table_results);
+
+    logic_gate norgate; // NOR
+    int nor_truth_table_results[4] = {1, 0, 0, 0};
+    norgate.define("NOR", nor_truth_table_results);
+
+    logic_gate orgate; // OR
+    int or_truth_table_results[4] = {0, 1, 1, 1};
+    orgate.define("OR", or_truth_table_results);
+
+    logic_gate xorgate; // XOR
+    int xor_truth_table_results[4] = {0, 1, 1, 0};
+    xorgate.define("XOR", xor_truth_table_results);
+
+    logic_gate xnorgate; // XNOR
+    int xnor_truth_table_results[4] = {1, 0, 0, 1};
+    xnorgate.define("XNOR", xnor_truth_table_results);
+
     int data[256];
     std::fill(std::begin(data), std::end(data), 0);
     int data_pointer = 0;
@@ -176,11 +205,91 @@ void interpret(std::vector<std::string> tokens) {
             std::cin >> user_input;
             data[data_pointer] = user_input;
             i++;
+        } else { // Past this point, we evaluate statements that have arguments.
+
+            if (tokens[i] == "BUFGATE") {
+                int arg = data[std::stoi(tokens[i+1])];
+                int return_place = std::stoi(tokens[i+2]);
+                int return_value = bufgate.eval(arg);
+                data[return_place] = return_value;
+                i+=3;
+
+            } else if (tokens[i] == "NOTGATE") {
+                int arg = data[std::stoi(tokens[i+1])];
+                int return_place = std::stoi(tokens[i+2]);
+                int return_value = notgate.eval(arg);
+                data[return_place] = return_value;
+                i+=3;
+
+            } else if (tokens[i] == "ANDGATE") {
+                int inp1 = data[std::stoi(tokens[i+1])];
+                int inp2 = data[std::stoi(tokens[i+2])];
+                int return_place = std::stoi(tokens[i+3]);
+                int return_value = andgate.eval(inp1, inp2);
+                data[return_place] = return_value;
+                i+=4;
+                
+            } else if (tokens[i] == "NANDGATE") {
+                int inp1 = data[std::stoi(tokens[i+1])];
+                int inp2 = data[std::stoi(tokens[i+2])];
+                int return_place = std::stoi(tokens[i+3]);
+                int return_value = nandgate.eval(inp1, inp2);
+                data[return_place] = return_value;
+                i+=4;
+                
+            } else if (tokens[i] == "NORGATE") {
+                int inp1 = data[std::stoi(tokens[i+1])];
+                int inp2 = data[std::stoi(tokens[i+2])];
+                int return_place = std::stoi(tokens[i+3]);
+                int return_value = norgate.eval(inp1, inp2);
+                data[return_place] = return_value;
+                i+=4;
+
+            } else if (tokens[i] == "ORGATE") {
+                int inp1 = data[std::stoi(tokens[i+1])];
+                int inp2 = data[std::stoi(tokens[i+2])];
+                int return_place = std::stoi(tokens[i+3]);
+                int return_value = orgate.eval(inp1, inp2);
+                data[return_place] = return_value;
+                i+=4;
+
+            } else if (tokens[i] == "XORGATE") {
+                int inp1 = data[std::stoi(tokens[i+1])];
+                int inp2 = data[std::stoi(tokens[i+2])];
+                int return_place = std::stoi(tokens[i+3]);
+                int return_value = xorgate.eval(inp1, inp2);
+                data[return_place] = return_value;
+                i+=4;
+
+            } else if (tokens[i] == "XNORGATE") {
+                int inp1 = data[std::stoi(tokens[i+1])];
+                int inp2 = data[std::stoi(tokens[i+2])];
+                int return_place = std::stoi(tokens[i+3]);
+                int return_value = xnorgate.eval(inp1, inp2);
+                data[return_place] = return_value;
+                i+=4;
+            }
+
         }
     }
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+    std::string filename = argv[1];
+    std::string filecontent;
+
+    std::ifstream inputFile(filename);
+    if (!inputFile) {
+        std::cerr << "Error opening .lk file: " << filename << std::endl;
+        return 1;
+    }
+
+    std::string line;
+    while (std::getline(inputFile, line)) {
+        filecontent += line + "\n";
+    }
+    inputFile.close();
+
 
     // LOGIC GATES DECLARATIONS
 
@@ -218,11 +327,7 @@ int main() {
 
     // INTERPRETING/TESTING
     //interpret();
-    std::string code;
-    do {
-        std::cout << ">>> ";
-        std::getline(std::cin, code);
-        interpret(tokenize(code));
-    } while (code != "quit");
+    std::vector <std::string> toks = tokenize(filecontent);
+    interpret(toks);
     return 0;
 }

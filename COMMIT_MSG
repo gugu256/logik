@@ -1,4 +1,3 @@
-Added the . statement (print)
-Added the , statement (input)
-Started the interpreter
-The interpreter can interpret all the basic BF instructions (+-,.<>)
+Interpreter can interpret all logic gates
+.exe built!
+Everything should be working!
