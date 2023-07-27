@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-using namespace std;
+//using namespace std;
 
 // BASIC LOGIC GATE STRUCTURE
 
@@ -70,13 +70,23 @@ struct logic_gate_1 {
 
 
 
-void tokenize(std::string code) {
+std::vector<std::string> tokenize(std::string code) {
+    code += "\n";
     std::vector<std::string> toks;
-    string tok = "";
-    cout << code << "\n";
+    std::string tok = "";
+    std::string num = "";
+    bool innum = false;
+    std::cout << code << "\n";
     for (int i = 0; i < code.size(); i++) {
         tok += code[i];
-        if (tok == ">") {
+        if (tok == " " or tok == "\n" or tok == "\t") {
+            if (num != "") {
+                toks.push_back(num);
+                num = "";
+                innum = false;
+            }
+            tok = "";
+        } else if (tok == ">") {
             toks.push_back("INDXUP");
             tok = "";
         } else if (tok == "<") {
@@ -88,14 +98,47 @@ void tokenize(std::string code) {
         } else if (tok == "-") {
             toks.push_back("MINUS");
             tok = "";
-        } else if (tok == "NOT" or tok == "not") {
+        } else if (tok == "NOT") {
             toks.push_back("NOTGATE");
             tok = "";
+        } else if (tok == "BUF") {
+            toks.push_back("BUFGATE");
+            tok = "";
+        } else if (tok == "AND") {
+            toks.push_back("ANDGATE");
+            tok = "";
+        } else if (tok == "NAND") {
+            toks.push_back("NANDGATE");
+            tok = "";
+        } else if (tok == "NOR") {
+            toks.push_back("NORGATE");
+            tok = "";
+        } else if (tok == "OR") {
+            toks.push_back("ORGATE");
+            tok = "";
+        } else if (tok == "XOR") {
+            toks.push_back("XORGATE");
+            tok = "";
+        } else if (tok == "XNOR") {
+            toks.push_back("XNORGATE");
+            tok = "";
+        } else if (tok == "0" or tok == "1" or tok == "2" or tok == "3" or tok == "4" or tok == "5" or tok == "6" or tok == "7" or tok == "8" or tok == "9") {
+            if (innum) {
+                num += tok;
+                tok = "";
+            } else {
+                innum = true;
+                num += tok;
+                tok = "";
+            }
         }
     }
+    std::cout << "-----" << "\n";
     for (int i = 0; i < toks.size(); i++) {
-        cout << toks[i] << ", ";
+        std::cout << toks[i] << ", ";
     }
+    std::cout << "\n-----" << "\n";
+    return toks;
 }
 
 int main() {
@@ -104,11 +147,23 @@ int main() {
 
     logic_gate_1 notgate; // NOT
     int not_truth_table_results[2] = {1, 0};
-    notgate.define("NOT", not_truth_table_results); // IM HERE
+    notgate.define("NOT", not_truth_table_results);
+
+    logic_gate_1 bufgate; // BUF
+    int buf_truth_table_results[2] = {0, 1};
+    bufgate.define("BUF", buf_truth_table_results);
 
     logic_gate andgate; // AND
     int and_truth_table_results[4] = {0, 0, 0, 1};
     andgate.define("AND", and_truth_table_results);
+
+    logic_gate nandgate; // NAND
+    int nand_truth_table_results[4] = {1, 1, 1, 0};
+    nandgate.define("NAND", nand_truth_table_results);
+
+    logic_gate norgate; // NOR
+    int nor_truth_table_results[4] = {1, 0, 0, 0};
+    norgate.define("NOR", nor_truth_table_results);
 
     logic_gate orgate; // OR
     int or_truth_table_results[4] = {0, 1, 1, 1};
@@ -118,14 +173,18 @@ int main() {
     int xor_truth_table_results[4] = {0, 1, 1, 0};
     xorgate.define("XOR", xor_truth_table_results);
 
+    logic_gate xnorgate; // XNOR
+    int xnor_truth_table_results[4] = {1, 0, 0, 1};
+    xnorgate.define("XNOR", xnor_truth_table_results);
+
     // INTERPRETING/TESTING
-    /*std::string code;
+    std::string code;
     do {
-        cout << ">>> ";
-        cin >> code;
+        std::cout << ">>> ";
+        std::getline(std::cin, code);
         tokenize(code);
-    } while (code != "quit");*/
-    int inp1, inp2;
+    } while (code != "quit");
+    /*int inp1, inp2;
     cin >> inp1;
     cin >> inp2;
     cout << "\n" << notgate.name << "\n";
@@ -135,7 +194,7 @@ int main() {
     cout << "\n" << orgate.name << "\n";
     cout << orgate.eval(inp1, inp2) << "\n";
     cout << "\n" << xorgate.name << "\n";
-    cout << xorgate.eval(inp1, inp2) << "\n";
+    cout << xorgate.eval(inp1, inp2) << "\n";*/
     return 0;
 }
 
