@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.g": "vb",
+        "*.mspl": "javascript",
+        "iostream": "cpp"
+    }
+}

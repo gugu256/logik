@@ -82,7 +82,19 @@ void tokenize(std::string code) {
         } else if (tok == "<") {
             toks.push_back("INDXDOWN");
             tok = "";
+        } else if (tok == "+") {
+            toks.push_back("PLUS");
+            tok = "";
+        } else if (tok == "-") {
+            toks.push_back("MINUS");
+            tok = "";
+        } else if (tok == "NOT" or tok == "not") {
+            toks.push_back("NOTGATE");
+            tok = "";
         }
+    }
+    for (int i = 0; i < toks.size(); i++) {
+        cout << toks[i] << ", ";
     }
 }
 
@@ -107,12 +119,23 @@ int main() {
     xorgate.define("XOR", xor_truth_table_results);
 
     // INTERPRETING/TESTING
-    std::string code;
+    /*std::string code;
     do {
         cout << ">>> ";
         cin >> code;
         tokenize(code);
-    } while (code != "quit");
+    } while (code != "quit");*/
+    int inp1, inp2;
+    cin >> inp1;
+    cin >> inp2;
+    cout << "\n" << notgate.name << "\n";
+    cout << notgate.eval(inp1) << "\n";
+    cout << "\n" << andgate.name << "\n";
+    cout << andgate.eval(inp1, inp2) << "\n";
+    cout << "\n" << orgate.name << "\n";
+    cout << orgate.eval(inp1, inp2) << "\n";
+    cout << "\n" << xorgate.name << "\n";
+    cout << xorgate.eval(inp1, inp2) << "\n";
     return 0;
 }
 
