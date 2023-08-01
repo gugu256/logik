@@ -269,28 +269,11 @@ void interpret(std::vector<std::string> tokens) {
                 data[return_place] = return_value;
                 i+=4;
             }
-
         }
     }
 }
 
 int main(int argc, char* argv[]) {
-    std::string filename = argv[1];
-    std::string filecontent;
-
-    std::ifstream inputFile(filename);
-    if (!inputFile) {
-        std::cerr << "Error opening .lk file: " << filename << std::endl;
-        return 1;
-    }
-
-    std::string line;
-    while (std::getline(inputFile, line)) {
-        filecontent += line + "\n";
-    }
-    inputFile.close();
-
-
     // LOGIC GATES DECLARATIONS
 
     logic_gate_1 notgate; // NOT
@@ -325,9 +308,39 @@ int main(int argc, char* argv[]) {
     int xnor_truth_table_results[4] = {1, 0, 0, 1};
     xnorgate.define("XNOR", xnor_truth_table_results);
 
+    try
+    {
+        std::string filename = argv[1];
+        std::string filecontent;
+        std::ifstream inputFile(filename);
+        if (!inputFile) {
+            std::cerr << "Error opening .lk file: " << filename << std::endl;
+            return 1;
+        }
+
+        std::string line;
+        while (std::getline(inputFile, line)) {
+            filecontent += line + "\n";
+        }
+        inputFile.close();
+        std::vector <std::string> toks = tokenize(filecontent);
+        interpret(toks);
+
+    }
+    catch(const std::exception& e)
+    {
+        std::cout << "Usage : logik <filename>.lk";
+        //std::cerr << e.what() << '\n';
+    }
+    
+    
+
+    
+
+
+
     // INTERPRETING/TESTING
     //interpret();
-    std::vector <std::string> toks = tokenize(filecontent);
-    interpret(toks);
+    
     return 0;
 }
